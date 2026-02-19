@@ -1,12 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\AIController;
 
-Route::get('/ai-health', function () {
-    $response = Http::get('http://127.0.0.1:8001/health');
-
-    return response()->json([
-        'from_fastapi' => $response->json()
-    ]);
-});
+Route::get('/ai-health', [AIController::class, 'health']);
+Route::post('/chat', [AIController::class, 'chat']);
