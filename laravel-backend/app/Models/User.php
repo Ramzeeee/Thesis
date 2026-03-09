@@ -28,4 +28,11 @@ class User extends Authenticatable
     {
         return $this->hasOne(DisclaimerAcknowledgment::class);
     }
+    // One user can have many chat messages
+    // Lets you do $user->chatMessages to get all their messages
+    // ordered from oldest to newest for display
+    public function chatMessages()
+    {
+        return $this->hasMany(ChatMessage::class)->orderBy('created_at', 'asc');
+    }
 }
