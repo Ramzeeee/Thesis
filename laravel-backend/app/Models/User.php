@@ -2,47 +2,30 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    // HasApiTokens — adds Sanctum token methods to this model
+    // like $user->createToken() and $user->tokens()
+    // Without this, login won't be able to generate tokens
+    use HasApiTokens, HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    // $fillable lists which columns are allowed to be mass-assigned
+    // meaning you can do User::create([...]) safely
+    // Columns NOT in this list are protected from bulk assignment
+    protected $fillable = ['name', 'email', 'password'];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    // $hidden prevents these fields from appearing in JSON responses
+    // You never want to accidentally return a password in an API response
+    protected $hidden = ['password', 'remember_token'];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    // Relationship: one user can have one disclaimer acknowledgment
+    // This lets you do $user->disclaimerAcknowledgment to get their record
+    public function disclaimerAcknowledgment()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->hasOne(DisclaimerAcknowledgment::class);
     }
 }
