@@ -65,6 +65,7 @@ class ChatController extends Controller
 
         $botReply = $aiResponse->json('reply') ?? 'Sorry, I could not process that.';
 
+
         // Save the bot's response to the database
         ChatMessage::create([
             'user_id'             => $userId,
